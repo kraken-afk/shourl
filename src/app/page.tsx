@@ -2,7 +2,6 @@ import { ShortUrlProvider } from "@/providers/short-url-provider";
 import { Input, ShortUrl } from "./components";
 
 export default async function Home() {
-
   return (
     <main className="max-w-screen-md mx-auto p-4">
       <h1 className="text-[#7aa2f7] my-8 font-bold text-4xl text-center">

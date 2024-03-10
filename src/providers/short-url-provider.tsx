@@ -1,8 +1,10 @@
-'use client';
+"use client";
 
 import { createContext, PropsWithChildren, useState } from "react";
 
-export const ShortUrlContext = createContext<ReturnType<typeof useState<string>> | null>(null);
+export const ShortUrlContext = createContext<ReturnType<
+  typeof useState<string>
+> | null>(null);
 
 export function ShortUrlProvider(props: PropsWithChildren) {
   const [state, setState] = useState<string | undefined>("");
@@ -10,5 +12,5 @@ export function ShortUrlProvider(props: PropsWithChildren) {
     <ShortUrlContext.Provider value={[state, setState]}>
       {props.children}
     </ShortUrlContext.Provider>
-  )
+  );
 }

@@ -17,7 +17,7 @@ export function Input() {
     z.infer<typeof UrlSchema>
   >({
     resolver: zodResolver(UrlSchema),
-    defaultValues: { url: "" }
+    defaultValues: { url: "" },
   });
   const submitHandler = handleSubmit(async (args) => {
     const response = await urlShortAction(args);
@@ -30,8 +30,7 @@ export function Input() {
     } else {
       setError(true);
 
-      toast.error(response.message)
-
+      toast.error(response.message);
     }
   });
 
@@ -51,11 +50,11 @@ export function Input() {
         <button
           type="submit"
           className="text-bold w-[20%] h-full bg-[#ffc777] text-[#c53b53] hover:opacity-95 transition-colors">
-          {
-            formState.isSubmitting
-              ? <Loader2 className="mx-auto animate-spin" />
-              : "Short"
-          }
+          {formState.isSubmitting ? (
+            <Loader2 className="mx-auto animate-spin" />
+          ) : (
+            "Short"
+          )}
         </button>
       </form>
       {(isError || formState.errors.url) && (
@@ -69,22 +68,34 @@ export function Input() {
 
 export function ShortUrl() {
   const [url] = useContext(ShortUrlContext)!;
-  const onClickHandler: MouseEventHandler<HTMLButtonElement> = function() {
-    window.navigator.clipboard.writeText(url!);
+  const hostname =
+    typeof window !== "undefined"
+      ? window.location.href.endsWith("/")
+        ? window.location.href.slice(0, window.location.href.length - 1)
+        : window.location.href
+      : "";
+  const href = hostname + `/${url}`;
+  const onClickHandler: MouseEventHandler<HTMLButtonElement> = () => {
+    window.navigator.clipboard.writeText(href);
     toast.info("Copied to clipboard");
-  }
+  };
 
   return (
     <>
-      {url && <div className="text-center block mx-auto mt-16 shadow-lg justify-center p-3 space-y-8 bg-[#24283b]">
-        <div className="p-4 bg-[#1f2335] flex items-center">
-          <span className="inline-block w-[90%]">{url}</span>
-          <button onClick={onClickHandler} className="w-[10%] rounded-t-md rounded-br-md bg-[#24283b] py-2 hover:opacity-80 transition-all translate-y-[-145%] translate-x-[42%]" title="Copy to Clipboard">
-            <span className="sr-only">Copy to Clipboard</span>
-            <Clipboard size={22} className="block mx-auto" />
-          </button>
+      {url && (
+        <div className="text-center block mx-auto mt-16 shadow-lg justify-center p-3 space-y-8 bg-[#24283b]">
+          <div className="p-4 bg-[#1f2335] flex items-center">
+            <span className="inline-block w-[90%]">{href}</span>
+            <button
+              onClick={onClickHandler}
+              className="w-[10%] rounded-t-md rounded-br-md bg-[#24283b] py-2 hover:opacity-80 transition-all translate-y-[-145%] translate-x-[42%]"
+              title="Copy to Clipboard">
+              <span className="sr-only">Copy to Clipboard</span>
+              <Clipboard size={22} className="block mx-auto" />
+            </button>
+          </div>
         </div>
-      </div>}
+      )}
     </>
-  )
+  );
 }
